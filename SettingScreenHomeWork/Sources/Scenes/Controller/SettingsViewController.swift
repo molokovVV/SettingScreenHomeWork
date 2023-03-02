@@ -1,11 +1,80 @@
 //
-//  ExtensionsView.swift
+//  ViewController.swift
 //  SettingScreenHomeWork
 //
 //  Created by Виталик Молоков on 19.01.2023.
 //
 
 import UIKit
+import SnapKit
+
+
+class SettingsViewController: UIViewController {
+    
+    //MARK: - Properties
+    
+    var model: SettingScreenModel
+    
+    //MARK: - UI Elements
+    
+    private lazy var tableView: UITableView = {
+        let table = UITableView(frame: .zero, style: .insetGrouped)
+        table.delegate = self
+        table.dataSource = self
+        table.register(SettingTableViewCell.self, 
+                       forCellReuseIdentifier: SettingTableViewCell.indentifier)
+        table.register(SwitchTableViewCell.self, 
+                       forCellReuseIdentifier: SwitchTableViewCell.indentifier)
+        table.register(TitleTableViewCell.self,
+                       forCellReuseIdentifier: TitleTableViewCell.indentifier)
+        table.register(FamilyTableViewCell.self,
+                       forCellReuseIdentifier: FamilyTableViewCell.indentifier)
+        table.register(SubtitleTableViewCell.self,
+                       forCellReuseIdentifier: SubtitleTableViewCell.indentifier)
+        
+        return table
+    }()
+    
+    //MARK: - LifeCycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        model = SettingScreenModel()
+        setupView()
+        setupHierarchy()
+        setupLayout()
+    }
+    
+    //MARK: - Setups
+    
+    private func setupView() {
+        title = "Settings"
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    private func setupHierarchy() {
+        view.addSubview(tableView)
+    }
+    
+    private func setupLayout() {
+        tableView.snp.makeConstraints { make in
+            make.top.right.bottom.left.equalTo(view)
+        }
+    }
+    
+    private func settingAdditionalViews() {
+        view.backgroundColor = .systemGray2
+    }
+    
+    init(model: SettingScreenModel) {
+        self.model = model
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
 
 extension SettingsViewController: UITableViewDelegate {
     
@@ -15,7 +84,7 @@ extension SettingsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let viewController = AdditionalViewController()
-        let model = dataModel.variations[indexPath.section].options[indexPath.row]
+        let model = model.variations[indexPath.section].options[indexPath.row]
         
         switch model {
         case .staticCells(let model):
@@ -38,7 +107,7 @@ extension SettingsViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let model = dataModel.variations[indexPath.section].options[indexPath.row]
+        let model = model.variations[indexPath.section].options[indexPath.row]
         
         switch model {
         case .titleCells(_):
@@ -58,11 +127,11 @@ extension SettingsViewController: UITableViewDelegate {
 extension SettingsViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return dataModel.variations.count
+        return model.variations.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let data = dataModel.variations[indexPath.section].options[indexPath.row]
+        let data = model.variations[indexPath.section].options[indexPath.row]
         switch data.self {
         case .staticCells(let data):
             guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingTableViewCell.indentifier, for: indexPath) as? SettingTableViewCell
@@ -98,6 +167,6 @@ extension SettingsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataModel.variations[section].options.count
+        return model.variations[section].options.count
     }
 }
