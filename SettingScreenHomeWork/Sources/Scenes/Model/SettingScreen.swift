@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol DataSourceProtocol {
+protocol SettingScreen {
     var variations: [Section] { get set }
 }
 

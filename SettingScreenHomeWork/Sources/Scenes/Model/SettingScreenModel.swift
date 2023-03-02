@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DataSource: DataSourceProtocol {
+class SettingScreenModel: SettingScreen {
     
     static let appleIDTitle = "Vitalii Molokov"
     static let appleIDIcon = UIImage(named: "User1")

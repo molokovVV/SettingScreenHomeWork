@@ -16,7 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        let model = DataSource()
+        let model = SettingScreenModel()
         let viewController = SettingsViewController(model: model)
         let navigationController = UINavigationController(rootViewController: viewController)
         window?.rootViewController = navigationController
